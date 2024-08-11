@@ -29,7 +29,10 @@ use bevy::{prelude::*, window::PrimaryWindow};
 use bevy_kira_audio::{Audio, AudioControl};
 use bevy_rapier2d::prelude::*;
 
-use crate::{world::pipes::Pipe, FlappybirdState};
+use crate::{
+    world::pipes::{self, Pipe, PipeSegment},
+    FlappybirdState,
+};
 
 pub mod animation;
 pub mod controller;
@@ -85,6 +88,7 @@ pub fn spawn_player(
         AdditionalMassProperties::Mass(10.0),
         Velocity::default(),
         Collider::capsule_x(1., 6.),
+        CollisionGroups::default(),
         AnimationTimer(Timer::new(Duration::from_millis(100), TimerMode::Repeating)),
     ));
 }
@@ -96,6 +100,7 @@ fn deadly_touch(
     asset_server: Res<AssetServer>,
     state: Res<State<FlappybirdState>>,
     mut next_state: ResMut<NextState<FlappybirdState>>,
+    mut pipe_segemnt_query: Query<&mut CollisionGroups, With<PipeSegment>>,
 ) {
     if state.get() != &FlappybirdState::InGame {
         return;
@@ -104,6 +109,10 @@ fn deadly_touch(
         match event {
             CollisionEvent::Started(entity1, entity2, _) => {
                 if query.get(*entity1).is_ok() && query.get(*entity2).is_ok() {
+                    // TODO: only do this to the pipe segments that the player collided with, make the pipes non-colliable on death
+                    for mut collision_groups in pipe_segemnt_query.iter_mut() {
+                        collision_groups.filters = Group::NONE;
+                    }
                     next_state.set(FlappybirdState::GameOver);
                     audio.play(
                         asset_server

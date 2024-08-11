@@ -34,6 +34,9 @@ use super::SpawnTimer;
 #[derive(Debug, Component)]
 pub struct Pipe;
 
+#[derive(Debug, Component)]
+pub struct PipeSegment;
+
 fn spawn_pipes(
     mut commands: Commands,
     time: Res<Time>,
@@ -75,7 +78,9 @@ fn spawn_pipes(
                         ..Default::default()
                     },
                     Collider::cuboid(30. / 2., 512. / 2.),
+                    CollisionGroups::new(Group::all(), Group::all()),
                     ActiveEvents::COLLISION_EVENTS,
+                    PipeSegment,
                 ));
                 parent.spawn((
                     SpriteBundle {
@@ -86,7 +91,9 @@ fn spawn_pipes(
                         ..Default::default()
                     },
                     Collider::cuboid(30. / 2., 512. / 2.),
+                    CollisionGroups::new(Group::all(), Group::all()),
                     ActiveEvents::COLLISION_EVENTS,
+                    PipeSegment,
                 ));
             });
     }
