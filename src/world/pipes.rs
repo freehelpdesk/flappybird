@@ -27,7 +27,7 @@ use bevy_kira_audio::{Audio, AudioControl};
 use bevy_rapier2d::prelude::*;
 use rand::Rng;
 
-use crate::{player::Player, ui::score::ScoreUI, world::Speed, FlappybirdState};
+use crate::{player::Player, ui::score::ScoreUI, world::WorldSpeed, FlappybirdState};
 
 use super::SpawnTimer;
 
@@ -66,7 +66,6 @@ fn spawn_pipes(
                 ActiveEvents::COLLISION_EVENTS,
                 Sensor,
                 Pipe,
-                Speed(150.0),
             ))
             .with_children(|parent| {
                 parent.spawn((
@@ -99,8 +98,12 @@ fn spawn_pipes(
     }
 }
 
-fn move_pipes(time: Res<Time>, mut query: Query<(&Speed, &mut Transform), With<Pipe>>) {
-    for (speed, mut transform) in query.iter_mut() {
+fn move_pipes(
+    time: Res<Time>,
+    speed: Res<WorldSpeed>,
+    mut query: Query<&mut Transform, With<Pipe>>,
+) {
+    for mut transform in query.iter_mut() {
         transform.translation.x -= speed.0 * time.delta_seconds();
     }
 }

@@ -165,7 +165,7 @@ fn title_button_system(
     window_query: Query<&Window, With<PrimaryWindow>>,
 ) {
     for (interaction, button) in interaction_query.iter_mut() {
-        let window = window_query.get_single().unwrap();
+        let window = window_query.single();
         let mut transform = player_query.single_mut();
         println!("{:?}", button);
         match *interaction {

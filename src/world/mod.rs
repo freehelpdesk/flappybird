@@ -31,5 +31,5 @@ pub mod sky;
 #[derive(Resource)]
 struct SpawnTimer(Timer);
 
-#[derive(Component)]
-pub struct Speed(pub f32);
+#[derive(Resource)]
+pub struct WorldSpeed(pub f32);

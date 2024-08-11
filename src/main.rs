@@ -33,7 +33,7 @@ use ui::titlescreen::TitlescreenPlugin;
 use world::ground::{Ground, GroundPlugin};
 use world::pipes::PipePlugin;
 use world::sky::{Sky, SkyPlugin};
-use world::Speed;
+use world::WorldSpeed;
 
 pub mod player;
 pub mod ui;
@@ -69,6 +69,7 @@ fn main() {
             GroundPlugin,
         ))
         .init_state::<FlappybirdState>()
+        .insert_resource(WorldSpeed(150.0))
         .add_systems(Startup, setup)
         .add_systems(Startup, spawn_camera)
         .run();
@@ -115,7 +116,6 @@ pub fn setup(
                 ..Default::default()
             },
             Ground,
-            Speed(150.0),
             Collider::cuboid(168. / 2., 56. / 2.),
             ActiveEvents::COLLISION_EVENTS,
         ));
@@ -144,7 +144,6 @@ pub fn setup(
                 ..Default::default()
             },
             Sky,
-            Speed(20.0),
         ));
     }
 }

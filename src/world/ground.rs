@@ -24,18 +24,30 @@ SOFTWARE.
 
 use bevy::{prelude::*, window::PrimaryWindow};
 use bevy_rapier2d::prelude::*;
+use chrono::offset;
 
 use crate::FlappybirdState;
 
-use super::Speed;
+use super::WorldSpeed;
 
 #[derive(Component)]
 pub struct Ground;
 
-fn move_ground(time: Res<Time>, mut query: Query<(&Speed, &mut Transform), With<Ground>>) {
-    for (speed, mut transform) in query.iter_mut() {
-        transform.translation.x -= speed.0 * time.delta_seconds();
+#[derive(Resource)]
+struct GroundOffset(pub f32);
+
+fn move_ground(
+    time: Res<Time>,
+    speed: Res<WorldSpeed>,
+    mut query: Query<&mut Transform, With<Ground>>,
+    mut offset: ResMut<GroundOffset>,
+) {
+    let delta_x = time.delta_seconds() * speed.0;
+    for mut transform in query.iter_mut() {
+        transform.translation.x -= delta_x;
     }
+
+    offset.0 += delta_x;
 }
 
 fn despawn_and_spawn_ground(
@@ -43,6 +55,7 @@ fn despawn_and_spawn_ground(
     mut query: Query<(Entity, &Transform), With<Ground>>,
     window_query: Query<&Window, With<PrimaryWindow>>,
     asset_server: Res<AssetServer>,
+    mut offset: ResMut<GroundOffset>,
 ) {
     let window = window_query.get_single().unwrap();
     let texture_handle = asset_server
@@ -51,7 +64,7 @@ fn despawn_and_spawn_ground(
     let texture_width = 168.0; // Adjust based on your texture width
     let texture_scale = Vec3::splat(3.); // Adjust based on your texture scale
 
-    let effective_width = texture_width * texture_scale.x;
+    let effective_width = texture_width * texture_scale.x - offset.0;
 
     let mut ground_entities: Vec<(Entity, &Transform)> = query.iter_mut().collect();
     ground_entities.sort_by(|a, b| a.1.translation.x.partial_cmp(&b.1.translation.x).unwrap());
@@ -81,16 +94,16 @@ fn despawn_and_spawn_ground(
                 Collider::cuboid(168. / 2., 56. / 2.),
                 ActiveEvents::COLLISION_EVENTS,
                 Ground,
-                Speed(150.0),
             ));
         }
     }
+    offset.0 = 0.;
 }
 
 pub struct GroundPlugin;
 impl Plugin for GroundPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(
+        app.insert_resource(GroundOffset(0.)).add_systems(
             Update,
             (move_ground, despawn_and_spawn_ground)
                 .run_if(not(in_state(FlappybirdState::GameOver))),

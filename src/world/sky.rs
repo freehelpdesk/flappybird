@@ -26,15 +26,26 @@ use bevy::{prelude::*, window::PrimaryWindow};
 
 use crate::FlappybirdState;
 
-use super::Speed;
+use super::WorldSpeed;
 
 #[derive(Component)]
 pub struct Sky;
 
-fn move_sky(time: Res<Time>, mut sky_query: Query<(&Speed, &mut Transform), With<Sky>>) {
-    for (speed, mut transform) in sky_query.iter_mut() {
-        transform.translation.x -= speed.0 * time.delta_seconds();
+#[derive(Resource)]
+struct SkyOffset(pub f32);
+
+fn move_sky(
+    time: Res<Time>,
+    speed: Res<WorldSpeed>,
+    mut sky_query: Query<&mut Transform, With<Sky>>,
+    mut offset: ResMut<SkyOffset>,
+) {
+    let delta_x = (speed.0 / 3.) * time.delta_seconds();
+    for mut transform in sky_query.iter_mut() {
+        transform.translation.x -= delta_x;
     }
+
+    offset.0 += delta_x;
 }
 
 fn despawn_and_spawn_sky(
@@ -42,6 +53,7 @@ fn despawn_and_spawn_sky(
     mut query: Query<(Entity, &Transform), With<Sky>>,
     window_query: Query<&Window, With<PrimaryWindow>>,
     asset_server: Res<AssetServer>,
+    mut offset: ResMut<SkyOffset>,
 ) {
     let window = window_query.get_single().unwrap();
     let texture_handle = asset_server
@@ -66,7 +78,7 @@ fn despawn_and_spawn_sky(
                 .map_or(-window.width() / 2., |(_, transform)| {
                     transform.translation.x
                 });
-            let new_x = rightmost_x + effective_width;
+            let new_x = rightmost_x + effective_width - offset.0;
             commands.spawn((
                 SpriteBundle {
                     texture: texture_handle.clone(),
@@ -78,16 +90,17 @@ fn despawn_and_spawn_sky(
                     ..Default::default()
                 },
                 Sky,
-                Speed(20.0),
             ));
         }
     }
+
+    offset.0 = 0.;
 }
 
 pub struct SkyPlugin;
 impl Plugin for SkyPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(
+        app.insert_resource(SkyOffset(0.)).add_systems(
             Update,
             (move_sky, despawn_and_spawn_sky).run_if(not(in_state(FlappybirdState::GameOver))),
         );
