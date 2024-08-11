@@ -10,13 +10,12 @@
 <h4 align="center">A clone of the original Flappybird game written by Dong Nguyen using <a href="https://bevyengine.org/" target="_blank">Bevy</a>.</h4>
 
 <p align="center">
-  <a href="https://img.shields.io/crates/v/bevy?style=flat&label=Bevy&color=232326">
-    <img src="https://img.shields.io/crates/v/bevy?style=flat&label=Bevy&color=232326"
-         alt="Bevy">
-  </a>
-  <a href="https://img.shields.io/crates/v/bevy_rapier2d?label=Rapier&color=657884
-  "><img src="https://img.shields.io/crates/v/bevy_rapier2d?label=Rapier&color=657884
-  "></a>
+    <a href="https://img.shields.io/crates/v/bevy?style=flat&label=Bevy&color=232326">
+        <img src="https://img.shields.io/crates/v/bevy?style=flat&label=Bevy&color=232326" alt="Bevy">
+    </a>
+    <a href="https://img.shields.io/crates/v/bevy_rapier2d?label=Rapier&color=657884">
+        <img src="https://img.shields.io/crates/v/bevy_rapier2d?label=Rapier&color=657884" alt="Rapier">
+    </a>
 </p>
 
 <p align="center">

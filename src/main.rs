@@ -59,8 +59,8 @@ fn main() {
             RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0),
             #[cfg(debug_assertions)]
             RapierDebugRenderPlugin::default(),
-            #[cfg(debug_assertions)]
-            WorldInspectorPlugin::new(),
+            //#[cfg(debug_assertions)]
+            //WorldInspectorPlugin::new(),
             AudioPlugin,
             PlayerPlugin,
             TitlescreenPlugin,
