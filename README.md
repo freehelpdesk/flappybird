@@ -22,7 +22,8 @@
 <p align="center">
   <a href="#how-to-compile">How to Compile</a> •
   <a href="#download">Download</a> •
-  <a href="#credits">Credits</a>
+  <a href="#credits">Credits</a> •
+  <a href="https://freehelpdesk.dev/playtest.html">Playtest</a>
 </p>
 
 <p align="center">
