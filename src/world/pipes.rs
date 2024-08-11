@@ -140,6 +140,15 @@ fn pipe_reached(
     }
 }
 
+fn despawn_pipes(mut commands: Commands, query: Query<(Entity, &Transform), With<Pipe>>) {
+    let effective_pipe_width = 30. * 3.;
+    for (entity, pipe) in query.iter() {
+        if pipe.translation.x <= -effective_pipe_width / 2. {
+            commands.entity(entity).despawn_recursive();
+        }
+    }
+}
+
 pub struct PipePlugin;
 
 impl Plugin for PipePlugin {
@@ -147,7 +156,8 @@ impl Plugin for PipePlugin {
         app.insert_resource(SpawnTimer(Timer::from_seconds(1.5, TimerMode::Repeating)))
             .add_systems(
                 Update,
-                (spawn_pipes, move_pipes, pipe_reached).run_if(in_state(FlappybirdState::InGame)),
+                (spawn_pipes, move_pipes, pipe_reached, despawn_pipes)
+                    .run_if(in_state(FlappybirdState::InGame)),
             );
     }
 }
