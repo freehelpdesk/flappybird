@@ -1,7 +1,7 @@
 
 <h1 align="center">
   <br>
-  <a href="https://github.com/freehelpdesk/flappybird"><img style="border-radius:25%;" src="github/icon.png" alt="Flappybird" width="200"></a>
+  <a href="https://github.com/freehelpdesk/flappybird"><img src="github/icon-rounded.png" alt="Flappybird" width="200"></a>
   <br>
   Flappybird Revision Project
   <br>
