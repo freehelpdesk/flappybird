@@ -27,7 +27,7 @@
 
 <p align="center">
     <br>
-    <img style="filter: drop-shadow(0 0 0.75rem black);border-radius:5px;max-width: 75%;" src="github/windows-screenshot.png" alt="Screenshot">
+    <img style="filter: drop-shadow(0 0 0.75rem black);border-radius:5px;max-width: 75%;" src="github/image.png" alt="Screenshot">
 </p>
 
 ## How To Compile
