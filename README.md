@@ -41,6 +41,9 @@ $ git clone --recursive https://github.com/freehelpdesk/flappybird
 # Go into the repository
 $ cd flappybird
 
+# Switch to rust nightly
+$ rustup default nightly
+
 # Compile the binary
 $ cargo build --release
 ```
